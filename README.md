@@ -1,9 +1,53 @@
-Forex rates for all relevant currency pairs are collected over a five-hour period and stored in auxiliary database tables designated for each pair. At the conclusion of every six-minute interval, starting after the first interval, key statistics such as minimum, maximum, mean, volatility, and fractal dimension (fd) are calculated. These calculations culminate in a single record for each currency pair that is stored in the appropriate statistics database table. This record encapsulates the data for the specified six-minute window.
+# Forex Trading Strategy
 
-After two hours have elapsed, the system enhances its analysis by calculating the correlation between the mean rates of each currency pair and those of EURUSD and USDJPY. These correlations are then included as additional columns in the corresponding tables for each currency pair in the statistics database.
+## Overview
+This project implements a Forex trading strategy that involves collecting, analyzing, and predicting forex rates for relevant currency pairs. The strategy is designed to run over an eight-hour period, leveraging various statistical methods and machine learning techniques to make informed trading decisions.
 
-At the conclusion of the fourth and fifth hours, the code generates synthetic data by retrieving records for the last twenty timestamps for all base currency pairs from the statistics database. The process focuses solely on relevant statistical metrics, disregarding features like data entry timestamps and IDs. For each timestamp, the script collects these metrics for each designated currency pair, aggregating them into separate data frames. These data frames are subsequently merged, and the script computes the average of these metrics across all currency pairs to formulate a single synthetic record for each timestamp. This procedure is replicated for all 20 timestamps, ultimately producing a DataFrame filled with synthetic records. The synthetic data is then passed to PyCaret’s regression module to determine the mean rate (target). The best model is found and is used to predict mean rates for non-base currency pairs GBPUSD and USDJPY. Mean Absolute Error (MAE) between actual and predicted values is used to classify currency pairs as ‘Forecastable’ or ‘Non Forecastable’.
+## Data Collection
+- **Duration**: Forex rates are collected over a five-hour period.
+- **Storage**: Rates are stored in auxiliary database tables designated for each currency pair.
+- **Interval**: Every six minutes, key statistics are calculated.
 
-At the end of the fifth hour, a trading strategy is implemented by conducting a time series regression on the last twenty data points for GBPUSD and USDJPY to determine their respective slopes. The strategy involves taking a long position on the currency pair with the greater or positive slope and a short position on the pair with a lesser or negative slope. Rates for these pairs are recorded at the end of the fifth hour and the trading volume is determined by setting the long/short (L/S) ratio to 1. This involves buying 'n' units of the long pair and selling an equivalent value of the short pair. This investment is reiterated at the conclusion of the sixth and seventh hours using the updated rates to adjust the positions accordingly.
+## Key Statistics
+- **Calculated Every Six Minutes**:
+  - Minimum
+  - Maximum
+  - Mean
+  - Volatility
+  - Fractal Dimension (fd)
+- **Storage**: These statistics are stored in the appropriate statistics database table for each currency pair.
 
-Finally, at the end of the eighth hour, rates for the currency pairs are again recorded, and all open positions are closed. The change in value for both the long and short positions is then calculated to evaluate the financial outcome of the strategy, providing insight into the effectiveness of the trading strategy taken.
+## Correlation Calculation
+- **Timing**: After two hours.
+- **Pairs**: Correlations are calculated between the mean rates of each currency pair and those of EURUSD and USDJPY.
+- **Storage**: Correlations are included as additional columns in the statistics database tables for each currency pair.
+
+## Synthetic Data Generation
+- **Timing**: At the conclusion of the fourth and fifth hours.
+- **Process**:
+  - Retrieve records for the last twenty timestamps.
+  - Aggregate relevant statistical metrics into data frames.
+  - Merge data frames and compute average metrics to create synthetic records.
+- **Machine Learning**:
+  - Use PyCaret’s regression module to determine the mean rate (target).
+  - Predict mean rates for GBPUSD and USDJPY.
+  - Classify currency pairs as ‘Forecastable’ or ‘Non Forecastable’ based on Mean Absolute Error (MAE).
+
+## Trading Strategy
+- **Initiation**: At the end of the fifth hour.
+- **Method**:
+  - Conduct a time series regression on the last twenty data points for GBPUSD and USDJPY to determine slopes.
+  - Take a long position on the pair with the greater or positive slope and a short position on the pair with the lesser or negative slope.
+  - Set the Long/Short (L/S) ratio to 1, buying 'n' units of the long pair and selling an equivalent value of the short pair.
+- **Adjustment**: Reiterate investment at the conclusion of the sixth and seventh hours using updated rates.
+
+## Closing Positions
+- **Timing**: At the end of the eighth hour.
+- **Process**:
+  - Record rates for the currency pairs.
+  - Close all open positions.
+  - Calculate the change in value for both long and short positions.
+  - Evaluate the financial outcome to determine the effectiveness of the trading strategy.
+
+## Summary
+This trading strategy uses a systematic approach to collect and analyze forex rates, generate synthetic data for prediction, and implement a trading strategy based on statistical insights. The ultimate goal is to evaluate the profitability and effectiveness of the strategy over the specified eight-hour period.
